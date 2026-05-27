@@ -2,37 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Piroll Design</title>
+    <title>Piroll Design - Professional Web Design Studio</title>
     <link rel="stylesheet" href="style1.css">
     <link rel="stylesheet" href="style2.css">
     <link rel="stylesheet" href="style3.css">
     <link rel="stylesheet" href="style4.css">
+    <link rel="stylesheet" href="style5.css">
 
-    <link rel="shortcut icon" href="image/logo.ico" type="image/x-icon">
+    <link rel="icon" href="image/logo.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700|Nunito+Sans:400,400i,500,700,700i&display=swap&subset=cyrillic" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Piroll Design - Professional web design and development studio">
+    <meta name="description" content="Piroll Design - Professional web design and development studio with over 20 years of experience">
+    <meta name="theme-color" content="#10c9c3">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 </head>
 <body>
-<header class="header">
+<!-- Magnetic Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- Noise Overlay -->
+<div class="noise-overlay"></div>
+
+<!-- Animated Background Blobs -->
+<div class="blobs-container">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
+<header class="header" role="banner">
    <div class="container">
        <div class="header_inner">
-           <div class="header_logo"><img src="image/logo.png" alt="Piroll Design Logo"></div>
+           <a href="#" class="header_logo" aria-label="Piroll Design Home">
+               <img src="image/logo.png" alt="Piroll Design Logo" width="150" height="50">
+           </a>
 
-           <nav id="nav">
-               <a class="nav_link" href="">Home</a>
+           <button class="burger-menu" id="burger-menu" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="main-nav">
+               <span></span>
+               <span></span>
+               <span></span>
+           </button>
+
+           <nav id="main-nav" role="navigation" aria-label="Main navigation">
+               <a class="nav_link" href="#home">Home</a>
                <a class="nav_link" href="#about">About</a>
                <a class="nav_link" href="#work">Work</a>
                <a class="nav_link" href="#process">Process</a>
                <a class="nav_link" href="#services">Services</a>
                <a class="nav_link" href="#testimonials">Testimonials</a>
                <a class="nav_link" href="#contacts">Contact</a>
-               <label class="burger-menu" for="nav-toggle">
-                   <span></span>
-               </label>
-            </nav>
-            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+           </nav>
         </div>
     </div>
 </header>
@@ -44,7 +64,9 @@
             <h1 class="title">We Design and Develop</h1>
 
             <p class="text">We are a new design studio based in USA. We have over 20 years of combined experience, and know a thing or two about designing websites and mobile apps.</p>
-            <button class="b1"><p class="bt">Contact Us</p></button>
+            <button class="b1 magnetic-btn" type="button" aria-label="Contact us">
+                <span class="bt">Contact Us</span>
+            </button>
             </article>
         </div>
     </div>
@@ -136,7 +158,7 @@
 
 
 
-            <button class="more">load more work</button>
+            <button class="more magnetic-btn" type="button">Load More Work</button>
         </div>
     </div>
 </div>
@@ -250,11 +272,23 @@ forward to start the next one asap.”</p><p class="title2">Michael Hopkins</p><
                 <p class="ptext">Let us know what you're looking for in an agency. We'll take a look and see
 if this could be the start of something beautiful.</p>
 
-                <div class="email"><input type="text" class="input1" placeholder="Your Name"><input type="text" class="input2" placeholder="Your Email"></div>
+                <form class="contact-form" id="contact-form" novalidate>
+                    <div class="email">
+                        <input type="text" class="input1 magnetic-input" name="name" placeholder="Your Name" required aria-label="Your name">
+                        <input type="email" class="input2 magnetic-input" name="email" placeholder="Your Email" required aria-label="Your email">
+                    </div>
 
-                <div class="comment"><input type="text" class="input3" placeholder="Your Title"><textarea type="text" class="input4" placeholder="Your Comment"></textarea></div>
+                    <div class="comment">
+                        <input type="text" class="input3 magnetic-input" name="title" placeholder="Your Title" required aria-label="Your title">
+                        <textarea class="input4 magnetic-input" name="comment" placeholder="Your Comment" required aria-label="Your comment"></textarea>
+                    </div>
 
-                <button class="but"><p class="butt">send massage</p></button>
+                    <button class="but magnetic-btn" type="submit">
+                        <span class="butt">Send Message</span>
+                    </button>
+                    
+                    <div class="form-message" id="form-message" aria-live="polite"></div>
+                </form>
 
             </div>
         </div>
@@ -386,14 +420,228 @@ Designed by robirurk.</div>
   </script>
 
 <script type="text/javascript">
- $(document).ready(function(){
-    $("#nav").on("click","a", function (event) {
+// Smooth scrolling with modern API
+$(document).ready(function(){
+    // Update nav ID reference
+    $("#main-nav").on("click","a", function (event) {
         event.preventDefault();
         var id  = $(this).attr('href'),
             top = $(id).offset().top;
         $('body,html').animate({scrollTop: top}, 1000);
+        
+        // Close mobile menu on navigation
+        $('#burger-menu').removeClass('active');
+        $('#main-nav').removeClass('active');
+        document.getElementById('burger-menu').setAttribute('aria-expanded', 'false');
+    });
+    
+    // Burger menu toggle
+    $('#burger-menu').on('click', function() {
+        $(this).toggleClass('active');
+        $('#main-nav').toggleClass('active');
+        var expanded = $(this).attr('aria-expanded') === 'true' || false;
+        $(this).attr('aria-expanded', !expanded);
+    });
+    
+    // Close mobile menu when clicking outside
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#main-nav, #burger-menu').length) {
+            $('#burger-menu').removeClass('active');
+            $('#main-nav').removeClass('active');
+            document.getElementById('burger-menu').setAttribute('aria-expanded', 'false');
+        }
     });
 });
+</script>
+
+<script>
+// Magnetic Cursor
+const cursor = document.getElementById('cursor');
+const cursorFollower = document.getElementById('cursor-follower');
+const magneticBtns = document.querySelectorAll('.magnetic-btn, .nav_link, .link, #mail, .slider__control, .but, .more, .b1');
+const magneticInputs = document.querySelectorAll('.magnetic-input');
+
+let mouseX = 0, mouseY = 0;
+let cursorX = 0, cursorY = 0;
+let followerX = 0, followerY = 0;
+
+// Check if device supports touch
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+if (!isTouchDevice) {
+    // Show cursor initially
+    cursor.style.opacity = '1';
+    cursorFollower.style.opacity = '1';
+    
+    // Track mouse movement
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    // Animate cursor with smooth follow
+    function animateCursor() {
+        // Lerp for smooth following
+        cursorX += (mouseX - cursorX) * 0.5;
+        cursorY += (mouseY - cursorY) * 0.5;
+        followerX += (mouseX - followerX) * 0.15;
+        followerY += (mouseY - followerY) * 0.15;
+        
+        cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+        cursorFollower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%)`;
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    
+    // Magnetic effect on buttons and links
+    magneticBtns.forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            cursor.classList.add('cursor-hover');
+            cursorFollower.classList.add('cursor-follower-hover');
+        });
+        
+        btn.addEventListener('mouseleave', () => {
+            cursor.classList.remove('cursor-hover');
+            cursorFollower.classList.remove('cursor-follower-hover');
+            btn.style.transform = 'translate3d(0, 0, 0)';
+        });
+        
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+            
+            btn.style.transform = `translate3d(${deltaX * 0.3}px, ${deltaY * 0.3}px, 0)`;
+        });
+    });
+    
+    // Input field cursor effect
+    magneticInputs.forEach(input => {
+        input.addEventListener('mouseenter', () => {
+            cursor.classList.add('cursor-input');
+        });
+        
+        input.addEventListener('mouseleave', () => {
+            cursor.classList.remove('cursor-input');
+        });
+    });
+} else {
+    // Hide cursor on touch devices
+    cursor.style.display = 'none';
+    cursorFollower.style.display = 'none';
+}
+</script>
+
+<script>
+// Number Animation
+function animateNumbers() {
+    const numElements = document.querySelectorAll('.num');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.textContent);
+                entry.target.textContent = '0';
+                
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        entry.target.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        entry.target.textContent = Math.floor(current);
+                    }
+                }, 30);
+                
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    numElements.forEach(num => observer.observe(num));
+}
+
+// Start number animation when DOM is ready
+document.addEventListener('DOMContentLoaded', animateNumbers);
+</script>
+
+<script>
+// Form Validation
+const contactForm = document.getElementById('contact-form');
+const formMessage = document.getElementById('form-message');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const name = formData.get('name').trim();
+        const email = formData.get('email').trim();
+        const title = formData.get('title').trim();
+        const comment = formData.get('comment').trim();
+        
+        let isValid = true;
+        let errorMessage = '';
+        
+        // Validate name
+        if (name.length < 2) {
+            isValid = false;
+            errorMessage = 'Please enter your name (at least 2 characters)';
+        }
+        
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            isValid = false;
+            errorMessage = 'Please enter a valid email address';
+        }
+        
+        // Validate title
+        if (title.length < 2) {
+            isValid = false;
+            errorMessage = 'Please enter a title';
+        }
+        
+        // Validate comment
+        if (comment.length < 10) {
+            isValid = false;
+            errorMessage = 'Please enter a comment (at least 10 characters)';
+        }
+        
+        if (isValid) {
+            // Simulate form submission
+            formMessage.style.color = '#10c9c3';
+            formMessage.textContent = 'Thank you! Your message has been sent successfully.';
+            contactForm.reset();
+            
+            setTimeout(() => {
+                formMessage.textContent = '';
+            }, 5000);
+        } else {
+            formMessage.style.color = '#ff4757';
+            formMessage.textContent = errorMessage;
+        }
+    });
+    
+    // Real-time validation feedback
+    const inputs = contactForm.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() !== '' && this.checkValidity()) {
+                this.style.borderColor = '#10c9c3';
+            } else if (this.value.trim() !== '') {
+                this.style.borderColor = '#ff4757';
+            } else {
+                this.style.borderColor = 'transparent';
+            }
+        });
+    });
+}
 </script>
 
 </body>
